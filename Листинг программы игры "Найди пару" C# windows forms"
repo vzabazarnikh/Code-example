@@ -1,0 +1,1265 @@
+Form1:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace WindowsFormsApp9
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        
+
+
+        public int[] p = new int[3];
+
+        string filename = "File1.txt";
+        string path = Directory.GetCurrentDirectory();
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            
+
+
+
+
+            if (!Directory.Exists(path + "/completed"))
+            {
+                Directory.CreateDirectory(path + "/completed");
+            }
+            if (!System.IO.File.Exists(path + "/completed/" + filename))
+            {
+                FileStream fs = File.Create(path + "/completed/" + filename);
+                StreamWriter writer = new StreamWriter(fs);
+                writer.Close();
+                using (StreamWriter file = new StreamWriter(path + "/completed/" + filename, true))
+                {
+                    file.WriteLine("255 192 192");
+                }
+            }
+
+            
+
+
+            string v = File.ReadLines(path + "/completed/" + filename).Skip(0).First();
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename))
+            {
+                file.WriteLine(v);
+            }
+
+            string filename2 = "Rating.txt";
+            if (!Directory.Exists(path + "/completed"))
+            {
+                Directory.CreateDirectory(path + "/completed");
+            }
+            if (!System.IO.File.Exists(path + "/completed/" + filename2))
+            {
+                FileStream fs2 = File.Create(path + "/completed/" + filename2);
+                StreamWriter writer2 = new StreamWriter(fs2);
+                writer2.Close();
+            }
+
+            string[] strok = File.ReadAllLines(path + "/completed/" + filename2);
+
+            if (strok.Length == 0)
+            {
+                textBox2.Text = "0";
+            }
+            else
+            {
+                string s = File.ReadLines(path + "/completed/" + filename2).Skip(0).First();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+                textBox2.Text = st[0];
+            }
+
+                
+
+
+
+
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+                String s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+
+        }
+
+        private void NotifyAboutClosedChildForm(object sender, FormClosedEventArgs args)
+        {
+            
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+                string s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form2 frmForm2 = new Form2();
+            frmForm2.Parent = this.Parent;
+            frmForm2.Show();
+            frmForm2.FormClosed += new FormClosedEventHandler(NotifyAboutClosedChildForm);
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form3 frmForm3 = new Form3();
+            frmForm3.Parent = this.Parent;
+            frmForm3.Show();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form4 frmForm4 = new Form4();
+            frmForm4.Parent = this.Parent;
+            frmForm4.Show();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+            Form5 frmForm5 = new Form5();
+            frmForm5.Parent = this.Parent;
+            frmForm5.Show();
+
+            using (StreamWriter file = new StreamWriter(path + "/completed/" + filename, true))
+            {
+                string n = textBox1.Text;
+                file.WriteLine(n);
+                file.WriteLine("0");
+            }
+        }
+    }
+}
+
+
+Form2:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace WindowsFormsApp9
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        static class Data
+        {
+            static public string Bu { get; set; }
+            static public int[] Num { get; set; }
+        }
+
+        public int[] p = new int[3];
+
+        public void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            int[] p = { 255, 192, 192 };
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+            string str = string.Empty;
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename))
+            {
+                str = reader.ReadToEnd();
+            }
+            string s = File.ReadLines(path + "/completed/" + filename).Skip(0).First();
+            str = str.Replace(s, "255 192 192");
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename))
+            {
+                file.Write(str);
+            }
+        }
+
+        public void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            int[] p = { 192, 192, 255 };
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+            string str = string.Empty;
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename))
+            {
+                str = reader.ReadToEnd();
+            }
+            string s = File.ReadLines(path + "/completed/" + filename).Skip(0).First();
+            str = str.Replace(s, "192 192 255");
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename))
+            {
+                file.Write(str);
+            }
+        }
+
+        public void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            int[] p = { 255, 192, 255 };
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+            string str = string.Empty;
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename))
+            {
+                str = reader.ReadToEnd();
+            }
+            string s = File.ReadLines(path + "/completed/" + filename).Skip(0).First();
+            str = str.Replace(s, "255 192 255");
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename))
+            {
+                file.Write(str);
+            }
+        }
+
+        public void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            int[] p = { 255, 255, 192 };
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+            string str = string.Empty;
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename))
+            {
+                str = reader.ReadToEnd();
+            }
+            string s = File.ReadLines(path + "/completed/" + filename).Skip(0).First();
+            str = str.Replace(s, "255 255 192");
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename))
+            {
+                file.Write(str);
+            }
+        }
+
+        public void radioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            int[] p = { 192, 255, 192 };
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+            string str = string.Empty;
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename))
+            {
+                str = reader.ReadToEnd();
+            }
+            string s = File.ReadLines(path + "/completed/" + filename).Skip(0).First();
+            str = str.Replace(s, "192 255 192");
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename))
+            {
+                file.Write(str);
+            }
+        }
+
+        public void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        
+    }
+}
+
+
+
+Form3:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace WindowsFormsApp9
+{
+    public partial class Form3 : Form
+    {
+        public Form3()
+        {
+            InitializeComponent();
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            int[] p = new int[3];
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+                
+                string s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
+
+
+
+Form4:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace WindowsFormsApp9
+{
+    public partial class Form4 : Form
+    {
+        public Form4()
+        {
+            InitializeComponent();
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            int[] p = new int[3];
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+                
+                string s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+            string str;
+            string filename2 = "Rating.txt";
+            using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename2))
+            {
+                str = reader.ReadToEnd();
+            }
+            
+
+            richTextBox1.Text = "Рейтинг:" + "\n" + str;
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
+
+
+Form5:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace WindowsFormsApp9
+{
+    public partial class Form5 : Form
+    {
+        public Form5()
+        {
+            InitializeComponent();
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            int[] p = new int[3];
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+
+                string s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+        }
+
+        Timer timer = new Timer();
+        string filename = "File1.txt";
+        string path = Directory.GetCurrentDirectory();
+
+        int timeLeft;
+        private void timer_Tick(object sender, EventArgs e)
+        {
+
+            if (timeLeft > 0)
+            {
+                timeLeft = timeLeft - 1;
+            }
+            else
+            {
+                timer.Stop();
+                pictureBox1.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox2.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox3.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox4.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox5.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox6.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox7.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox8.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox9.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox10.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox11.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox12.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox13.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox14.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox15.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                pictureBox16.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                t = 1;
+            }
+        }
+
+        int sh;
+
+        int t;
+        int k;
+        int[,] par = new int[16, 2];
+        private void Form5_Load(object sender, EventArgs e)
+        {
+            sh = 0;
+            textBox1.Text = sh.ToString();
+            t = 0;
+            for (int i = 1; i < 9; i++)
+            {
+                k = 0;
+                while (k == 0)
+                {
+                    Random rnd = new Random();
+                    int n = rnd.Next(0, 16);
+                    if (par[n, 0] == 0)
+                    {
+                        par[n, 0] = i;
+                        k = 1;
+                    }
+                }
+            }
+            for (int i = 1; i < 9; i++)
+            {
+                k = 0;
+                while (k == 0)
+                {
+                    Random rnd = new Random();
+                    int n = rnd.Next(0, 16);
+                    if (par[n, 0] == 0)
+                    {
+                        par[n, 0] = i;
+                        k = 1;
+                    }
+                }
+            }
+            k = 0;
+
+            pictureBox1.Image = Image.FromFile(path + "\\completed\\p\\" + par[0, 0].ToString() + ".jpg");
+            pictureBox2.Image = Image.FromFile(path + "\\completed\\p\\" + par[1, 0].ToString() + ".jpg");
+            pictureBox3.Image = Image.FromFile(path + "\\completed\\p\\" + par[2, 0].ToString() + ".jpg");
+            pictureBox4.Image = Image.FromFile(path + "\\completed\\p\\" + par[3, 0].ToString() + ".jpg");
+            pictureBox5.Image = Image.FromFile(path + "\\completed\\p\\" + par[4, 0].ToString() + ".jpg");
+            pictureBox6.Image = Image.FromFile(path + "\\completed\\p\\" + par[5, 0].ToString() + ".jpg");
+            pictureBox7.Image = Image.FromFile(path + "\\completed\\p\\" + par[6, 0].ToString() + ".jpg");
+            pictureBox8.Image = Image.FromFile(path + "\\completed\\p\\" + par[7, 0].ToString() + ".jpg");
+            pictureBox9.Image = Image.FromFile(path + "\\completed\\p\\" + par[8, 0].ToString() + ".jpg");
+            pictureBox10.Image = Image.FromFile(path + "\\completed\\p\\" + par[9, 0].ToString() + ".jpg");
+            pictureBox11.Image = Image.FromFile(path + "\\completed\\p\\" + par[10, 0].ToString() + ".jpg");
+            pictureBox12.Image = Image.FromFile(path + "\\completed\\p\\" + par[11, 0].ToString() + ".jpg");
+            pictureBox13.Image = Image.FromFile(path + "\\completed\\p\\" + par[12, 0].ToString() + ".jpg");
+            pictureBox14.Image = Image.FromFile(path + "\\completed\\p\\" + par[13, 0].ToString() + ".jpg");
+            pictureBox15.Image = Image.FromFile(path + "\\completed\\p\\" + par[14, 0].ToString() + ".jpg");
+            pictureBox16.Image = Image.FromFile(path + "\\completed\\p\\" + par[15, 0].ToString() + ".jpg");
+
+
+
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = 1000;
+            timeLeft = 1;
+            timer.Start();
+        }
+
+        Timer timer2 = new Timer();
+
+        private void timer_Tick2(object sender, EventArgs e)
+        {
+            if (timeLeft > 0)
+            {
+                timeLeft = timeLeft - 1;
+            }
+            else
+            {
+                timer2.Stop();
+
+                if ((h[0] == 0) | (h[1] == 0))
+                {
+                    pictureBox1.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[0, 1] = 0;
+                }
+                if ((h[0] == 1) | (h[1] == 1))
+                {
+                    pictureBox2.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[1, 1] = 0;
+                }
+                if ((h[0] == 2) | (h[1] == 2))
+                {
+                    pictureBox3.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[2, 1] = 0;
+                }
+                if ((h[0] == 3) | (h[1] == 3))
+                {
+                    pictureBox4.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[3, 1] = 0;
+                }
+                if ((h[0] == 4) | (h[1] == 4))
+                {
+                    pictureBox5.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[4, 1] = 0;
+                }
+                if ((h[0] == 5) | (h[1] == 5))
+                {
+                    pictureBox6.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[5, 1] = 0;
+                }
+                if ((h[0] == 6) | (h[1] == 6))
+                {
+                    pictureBox7.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[6, 1] = 0;
+                }
+                if ((h[0] == 7) | (h[1] == 7))
+                {
+                    pictureBox8.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[7, 1] = 0;
+                }
+                if ((h[0] == 8) | (h[1] == 8))
+                {
+                    pictureBox9.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[8, 1] = 0;
+                }
+                if ((h[0] == 9) | (h[1] == 9))
+                {
+                    pictureBox10.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[9, 1] = 0;
+                }
+                if ((h[0] == 10) | (h[1] == 10))
+                {
+                    pictureBox11.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[10, 1] = 0;
+                }
+                if ((h[0] == 11) | (h[1] == 11))
+                {
+                    pictureBox12.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[11, 1] = 0;
+                }
+                if ((h[0] == 12) | (h[1] == 12))
+                {
+                    pictureBox13.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[12, 1] = 0;
+                }
+                if ((h[0] == 13) | (h[1] == 13))
+                {
+                    pictureBox14.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[13, 1] = 0;
+                }
+                if ((h[0] == 14) | (h[1] == 14))
+                {
+                    pictureBox15.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[14, 1] = 0;
+                }
+                if ((h[0] == 15) | (h[1] == 15))
+                {
+                    pictureBox16.Image = Image.FromFile(path + "\\completed\\p\\" + "0.jpg");
+                    par[15, 1] = 0;
+                }
+                t = 1;
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void end()
+        {
+            k = 0;
+            if (par[h[0], 0] != par[h[1], 0])
+            {
+                t = 0;
+                timer2.Tick += new EventHandler(timer_Tick2);
+                timer2.Interval = 1000;
+                timeLeft = 0;
+                timer2.Start();
+            }
+            else
+            {
+                sh = sh + 20;
+                textBox1.Text = sh.ToString();
+                par[h[0], 1] = 1;
+                par[h[1], 1] = 1;
+                int pr = 0;
+                for (int i = 0; i < 16; i++)
+                {
+
+                    if (par[i, 1] != 1)
+                    {
+                        pr = 1;
+
+                    }
+
+                }
+                if (pr == 0)
+                {
+                    List<string> lines = File.ReadAllLines(path + "/completed/" + filename).ToList();
+                    File.WriteAllLines(path + "/completed/" + filename, lines.GetRange(0, lines.Count - 1).ToArray());
+                    using (StreamWriter file = new StreamWriter(path + "/completed/" + filename, true))
+                    {
+                        file.WriteLine(sh.ToString());
+                    }
+                    string filename2 = "Rating.txt";
+
+                    string v = File.ReadLines(path + "/completed/" + filename).Skip(1).First();
+
+                    string[] strok = File.ReadAllLines(path + "/completed/" + filename2);
+                    int i;
+                    if (strok.Length != 0)
+                    {
+                        using (StreamReader sr = new StreamReader(path + "/completed/" + filename2))
+                        {
+
+                            String line;
+                            int z = sh;
+                            i = 0;
+
+                            StreamReader srt = new StreamReader(path + "/completed/" + filename2);
+
+                            while (!srt.EndOfStream)
+                            {
+                                line = srt.ReadLine();
+                                if (z >= sh)
+                                {
+                                    if (line != "")
+                                    {
+                                        String[] st = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        z = int.Parse(st[0]);
+                                        i++;
+                                    }
+                                }
+                            }
+                            srt.Close();
+
+
+
+                        }
+                        string str;
+
+                        using (System.IO.StreamReader reader = System.IO.File.OpenText(path + "/completed/" + filename2))
+                        {
+                            str = reader.ReadToEnd();
+                        }
+
+                        string s = File.ReadLines(path + "/completed/" + filename2).Skip(i - 1).First();
+
+                        str = str.Replace(s, sh.ToString() + " " + v + "\n" + s);
+
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename2))
+                        {
+                            file.Write(str);
+                        }
+
+
+
+
+                    }
+                    else
+                    {
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(path + "/completed/" + filename2))
+                        {
+                            file.WriteLine(sh.ToString() + " " + v);
+                        }
+                    }
+
+
+
+
+
+                    Form6 frmForm6 = new Form6();
+                    frmForm6.Parent = this.Parent;
+                    frmForm6.Show();
+                    frmForm6.FormClosed += new FormClosedEventHandler(NotifyAboutClosedChildForm);
+                }
+
+            }
+
+        }
+
+
+
+
+        int[] h = new int[2];
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                {
+                    pictureBox1.Image = Image.FromFile(path + "\\completed\\p\\" + par[0, 0].ToString() + ".jpg");
+                    h[k] = 0;
+                    k++;
+                    if (k == 2)
+                    {
+                        end();
+                    }
+                }
+            }
+        }
+
+        private void pictureBox2_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox2.Image = Image.FromFile(path + "\\completed\\p\\" + par[1, 0].ToString() + ".jpg");
+                h[k] = 1;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox3_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox3.Image = Image.FromFile(path + "\\completed\\p\\" + par[2, 0].ToString() + ".jpg");
+                h[k] = 2;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox4_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox4.Image = Image.FromFile(path + "\\completed\\p\\" + par[3, 0].ToString() + ".jpg");
+                h[k] = 3;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox5_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox5.Image = Image.FromFile(path + "\\completed\\p\\" + par[4, 0].ToString() + ".jpg");
+                h[k] = 4;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox6_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox6.Image = Image.FromFile(path + "\\completed\\p\\" + par[5, 0].ToString() + ".jpg");
+                h[k] = 5;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox7_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox7.Image = Image.FromFile(path + "\\completed\\p\\" + par[6, 0].ToString() + ".jpg");
+                h[k] = 6;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox8_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox8.Image = Image.FromFile(path + "\\completed\\p\\" + par[7, 0].ToString() + ".jpg");
+                h[k] = 7;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox9_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox9.Image = Image.FromFile(path + "\\completed\\p\\" + par[8, 0].ToString() + ".jpg");
+                h[k] = 8;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox10_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox10.Image = Image.FromFile(path + "\\completed\\p\\" + par[9, 0].ToString() + ".jpg");
+                h[k] = 9;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox11_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox11.Image = Image.FromFile(path + "\\completed\\p\\" + par[10, 0].ToString() + ".jpg");
+                h[k] = 10;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox12_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox12.Image = Image.FromFile(path + "\\completed\\p\\" + par[11, 0].ToString() + ".jpg");
+                h[k] = 11;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox13_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox13.Image = Image.FromFile(path + "\\completed\\p\\" + par[12, 0].ToString() + ".jpg");
+                h[k] = 12;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox14_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox14.Image = Image.FromFile(path + "\\completed\\p\\" + par[13, 0].ToString() + ".jpg");
+                h[k] = 13;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void pictureBox15_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox15.Image = Image.FromFile(path + "\\completed\\p\\" + par[14, 0].ToString() + ".jpg");
+                h[k] = 14;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+
+        }
+
+        private void pictureBox16_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (t == 1)
+            {
+                if (sh != 0)
+                {
+                    sh = sh - 5;
+                    textBox1.Text = sh.ToString();
+                }
+                pictureBox16.Image = Image.FromFile(path + "\\completed\\p\\" + par[15, 0].ToString() + ".jpg");
+                h[k] = 15;
+                k++;
+                if (k == 2)
+                {
+                    end();
+                }
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+
+
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form7 frmForm7 = new Form7();
+            frmForm7.Parent = this.Parent;
+            frmForm7.Show();
+            frmForm7.FormClosed += new FormClosedEventHandler(NotifyAboutClosedChildForm);
+        }
+
+
+
+
+
+        private void NotifyAboutClosedChildForm(object sender, FormClosedEventArgs args)
+        {
+            string v = File.ReadLines(path + "/completed/" + filename).Skip(3).First();
+            List<string> lines = File.ReadAllLines(path + "/completed/" + filename).ToList();
+            File.WriteAllLines(path + "/completed/" + filename, lines.GetRange(0, lines.Count - 1).ToArray());
+            
+            if (v == "0")
+            {
+                List<string> lines2 = File.ReadAllLines(path + "/completed/" + filename).ToList();
+                File.WriteAllLines(path + "/completed/" + filename, lines2.GetRange(0, lines2.Count - 2).ToArray());
+                this.Close();
+            }
+
+
+        }
+    }
+        
+}
+
+
+
+Form6:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+
+namespace WindowsFormsApp9
+{
+    public partial class Form6 : Form
+    {
+        public Form6()
+        {
+            InitializeComponent();
+            
+            int[] p = new int[3];
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+
+                string s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+        }
+
+        string path = Directory.GetCurrentDirectory();
+        string filename = "File1.txt";
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter file = new StreamWriter(path + "/completed/" + filename, true))
+            {
+                file.WriteLine("0");
+            }
+
+
+
+            this.Close();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void Form6_Load(object sender, EventArgs e)
+        {
+            string filename = "File1.txt";
+            string path = Directory.GetCurrentDirectory();
+            string s = File.ReadLines(path + "/completed/" + filename).Skip(2).First();
+            textBox2.Text = "Очки: " + s;
+        }
+    }
+}
+
+
+
+Form7:
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+
+namespace WindowsFormsApp9
+{
+    public partial class Form7 : Form
+    {
+        public Form7()
+        {
+            InitializeComponent();
+        }
+
+        string filename = "File1.txt";
+        string path = Directory.GetCurrentDirectory();
+
+        private void Form7_Load(object sender, EventArgs e)
+        {
+            
+            int[] p = new int[3];
+            using (StreamReader f = new StreamReader(path + "/completed/" + filename))
+            {
+
+                string s = f.ReadLine();
+                String[] st = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                p[0] = int.Parse(st[0]);
+                p[1] = int.Parse(st[1]);
+                p[2] = int.Parse(st[2]);
+            }
+            this.BackColor = Color.FromArgb(p[0], p[1], p[2]);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter file = new StreamWriter(path + "/completed/" + filename, true))
+            {
+                file.WriteLine("1");
+            }
+
+
+
+            this.Close();
+        }
+    
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter file = new StreamWriter(path + "/completed/" + filename, true))
+            {
+                file.WriteLine("0");
+            }
+
+
+
+            this.Close();
+        }
+
+    }
+    
+}
