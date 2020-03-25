@@ -1,0 +1,235 @@
+Create database hospital_registry_1_1;
+go
+use hospital_registry_1_1;
+go
+create schema lib_;
+go
+
+
+
+
+
+
+create table lib_.Department(
+DepartmentID int primary key identity,
+Designation varchar(255) not null unique,
+);
+
+create table lib_.Paid_services(
+Paid_servicesID int primary key identity,
+Name_of_services varchar(255) not null unique,
+Price float not null,
+);
+
+
+create table lib_.Ward(
+WardID int primary key identity,
+DepartmentID int references lib_.Department(DepartmentID) not null,
+Gender varchar(10) not null check(Gender in ('Male' ,'Female', 'Indefined'))
+);
+
+
+
+
+
+
+
+
+
+create table lib_.Patients(
+PatientsID int primary key identity,
+PatientsName varchar(255) not null unique,
+Date_of_birth date not null check(datediff(day, Date_of_birth, getDate()) >= 1),
+DepartmentID int references lib_.Department(DepartmentID) not null,
+Date_of_admission date not null check(datediff(day, Date_of_admission, getDate()) >= 1),
+Gender varchar(10) not null check(Gender in ('Male','Female')),
+);
+
+create table lib_.Doctors(
+DoctorsID int primary key identity,
+DepartmentID int references lib_.Department(DepartmentID) not null,
+DoctorsName varchar(255) not null unique,
+Date_of_birth date not null check(datediff(day, Date_of_birth, getDate()) >= 1),
+Information varchar(255) not null unique);
+
+create table lib_.Сhecks(
+СhecksID int primary key identity,
+DoctorsID int references lib_.Doctors(DoctorsID) not null,
+PatientsID int references lib_.Patients(PatientsID) not null,
+Paid_servicesID int references lib_.Paid_services(Paid_servicesID) not null,
+);
+
+
+create table lib_.Treatment(
+TreatmentID int primary key identity,
+PatientsID int references lib_.Patients(PatientsID) not null,
+Description_ varchar(255) not null unique,
+);
+
+create table lib_.Operations(
+OperationsID int primary key identity,
+PatientsID int references lib_.Patients(PatientsID) not null,
+Result varchar(20) not null check(Result in ('Successfully', 'Unsuccessfully', 'Death')),
+);
+
+
+
+
+create table lib_.Patients_at_the_moment(
+PatientsID int references lib_.Patients(PatientsID) not null,
+WardID int references lib_.Ward(WardID) not null,
+);
+
+create table lib_.Dead(
+PatientsID int references lib_.Patients(PatientsID) not null,
+);
+
+create table lib_.Archive(
+PatientsID int references lib_.Patients(PatientsID) not null,
+Discharge_date date not null check(datediff(day, Discharge_date, getDate()) >= 1),
+);
+
+
+
+
+
+
+USE hospital_registry_1_1
+
+
+ALTER PROC Checkforcompleteness AS
+IF NULL = (SELECT Description_ FROM lib_.Treatment)
+BEGIN
+SELECT TreatmentID, PatientsID FROM lib_.Treatment
+WHERE Description_ = NULL
+END
+ELSE
+PRINT 'Все данные о каждом лечении заполнены'
+
+EXEC Checkforcompleteness -- паказывает, где данные о лечении отсутствуют
+
+
+ALTER PROC Archive(@I INT = 0) AS
+BEGIN
+	DELETE FROM lib_.Patients_at_the_moment
+	WHERE PatientsID = @I
+	insert lib_.Archive(PatientsID, Discharge_date)
+    values(@I, GETDATE ( )-1)
+END
+
+EXEC Archive 4 -- перемещает пациента из текущих в архив
+
+
+CREATE PROC Dead(@I INT = 0) AS
+BEGIN
+	DELETE FROM lib_.Patients_at_the_moment
+	WHERE PatientsID = @I
+	insert lib_.Dead(PatientsID)
+    values(@I)
+END
+
+EXEC Dead 3 -- перемещает пациента из текущих в мертвые
+
+
+
+
+CREATE VIEW Patientsinwards AS
+SELECT p1.[WardID], p2.[PatientsName], p2.[Date_of_birth], p2.[Date_of_admission], p2.[Gender] FROM [lib_].[Patients_at_the_moment] p1
+JOIN [lib_].[Patients] p2 ON p1.PatientsID = p2.PatientsID
+
+SELECT * FROM Patientsinwards -- представление, помогающее узнать для каждой из палат, какие пациенты в ней находятся
+
+
+
+
+ALTER VIEW Patientsfromarchive AS
+SELECT p1.[Discharge_date] AS Discharge, p2.[PatientsName] AS Name, p2.[Date_of_birth] AS Birth, p2.[Date_of_admission] AS Admission, p2.[Gender] AS Gender FROM [lib_].[Archive] p1
+JOIN [lib_].[Patients] p2 ON p1.[PatientsID] = p2.[PatientsID]
+
+SELECT * FROM Patientsfromarchive -- Выдает полные данные для пациентов из архива
+
+
+CREATE VIEW Countofdoctorsindepartments AS
+SELECT p1.[Designation] AS [Department], (SELECT COUNT([DoctorsID]) FROM [lib_].[Doctors] p2 WHERE p1.[DepartmentID] = p2.[DepartmentID]) AS Countosdoctors FROM [lib_].[Department] p1
+JOIN [lib_].[Doctors] p2 ON p1.[DepartmentID] = p2.[DepartmentID]
+
+SELECT * FROM Countofdoctorsindepartments -- представление, показывающее количество врачей по отделениям
+
+CREATE FUNCTION Patientsanddepartments()
+RETURNS @T TABLE
+(Name nvarchar(30), Designation nvarchar(50)) AS 
+BEGIN
+	INSERT @T SELECT p1.PatientsName AS Name, p2.[Designation] FROM [lib_].[Patients] p1
+	JOIN [lib_].[Department] p2 ON p1.DepartmentID = p2.DepartmentID
+	RETURN
+END
+
+SELECT * FROM Patientsanddepartments() -- выводит список всех пациентов и депертаментов
+
+
+CREATE FUNCTION TopPrice(@TOP int = 1)
+RETURNS @T TABLE
+(PatientID int, TotalPrice float, Name varchar(255)) AS
+BEGIN
+	INSERT @T SELECT TOP (@TOP) p1.PatientsID AS PatientID, (SELECT SUM([Price]) FROM [lib_].[Paid_services] p2 WHERE p1.[Paid_servicesID] = p2.[Paid_servicesID]), p3.[PatientsName] FROM [lib_].[Сhecks] p1
+	JOIN [lib_].[Patients] p3 ON p1.PatientsID = p3.PatientsID
+	JOIN [lib_].[Paid_services] p2 ON p1.[Paid_servicesID] = p2.[Paid_servicesID]
+	ORDER BY (SELECT SUM([Price]) FROM [lib_].[Paid_services] p2 WHERE p1.[Paid_servicesID] = p2.[Paid_servicesID])
+	RETURN
+END
+
+SELECT * FROM TopPrice(3) -- выводит указанное число пациентов, оплативших наибольший суммарный чек
+
+CREATE FUNCTION Latestondepartment(@id int = 0, @TOP int = 0)
+RETURNS @T TABLE
+(DepartmentID int, Name nvarchar(30), AdmissionDate date) AS
+BEGIN
+	IF (@id = 0)
+	INSERT @T SELECT p1.DepartmentID, p1.PatientsName, p1.[Date_of_admission] FROM [lib_].[Patients] p1
+	JOIN [lib_].[Department] p2 ON p2.[DepartmentID] = p1.[DepartmentID]
+	ELSE
+	INSERT @T SELECT p1.DepartmentID, p1.PatientsName, p1.[Date_of_admission] FROM [lib_].[Patients] p1
+	JOIN [lib_].[Department] p2 ON p2.[DepartmentID] = p1.[DepartmentID]
+	WHERE p1.DepartmentID = @id
+	RETURN
+END
+
+SELECT * FROM Latestondepartment(4, 5) -- выводит последних 5 пациентов, поступивших в конкретный депортамент
+
+
+
+
+
+
+CREATE TRIGGER Archive_ on [lib_].Archive
+AFTER UPDATE AS
+BEGIN
+DECLARE @pid int
+SELECT @pid = (SELECT [PatientsID] FROM inserted)
+DELETE FROM [lib_].[Patients_at_the_moment] where [PatientsID] = @pid;
+END -- удаляет из текущих пациентов тех, которые отправлены в архив
+
+CREATE TRIGGER Dead_ on [lib_].[Dead]
+AFTER UPDATE AS
+BEGIN
+DECLARE @pid int
+SELECT @pid = (SELECT [PatientsID] FROM inserted)
+DELETE FROM [lib_].[Patients_at_the_moment] where [PatientsID] = @pid;
+END -- удаляет из текущих пациентов тех, которые умерли
+
+
+
+CREATE TRIGGER   Gender_ on [lib_].[Patients_at_the_moment]
+AFTER UPDATE AS
+BEGIN
+DECLARE @Gender varchar(10)
+DECLARE @pid int
+DECLARE @wid int
+SELECT @pid = (SELECT [PatientsID] FROM inserted )
+SELECT @Gender = (SELECT Gender FROM [lib_].[Patients] WHERE @pid = [lib_].[Patients].[PatientsID])
+SELECT @wid = (SELECT [WardID] FROM [lib_].[Patients_at_the_moment] WHERE [lib_].[Patients_at_the_moment].PatientsID = @pid)
+	UPDATE [lib_].[Ward] SET [Gender] = @Gender
+	WHERE  [WardID] = @wid
+END -- при добавлении пациента в текущие и приписании его палате, гендер палаты меняется на его
+
+
