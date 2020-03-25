@@ -1,0 +1,255 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+ 
+ 
+struct a
+{
+    int count;
+    int nomber;
+    struct tnode *next, *before;
+};
+ 
+ 
+ 
+struct a * get(int a, int k)
+ {
+    struct a *head;
+ 
+    int n = 1, i;
+    head= malloc(sizeof(struct a));
+    head->next = NULL;
+    head->before = NULL;
+    head->count = 1;
+    head->nomber = n;
+    n++;
+    struct a *b;
+    b = head;
+ 
+    for(i = 1; i<a; i++){
+        struct a *new;
+        new= malloc(sizeof(struct a));
+        b->next = new;
+        new->before = b;
+        new->next = NULL;
+        new->count = 1;;
+        new->nomber = n;
+        b = b->next;
+        n++;
+    }
+    struct a *new;
+    new= malloc(sizeof(struct a));
+    b->next = new;
+    new->before = b;
+    new->next = NULL;
+    new->count = 0;;
+    new->nomber = n;
+    b = b->next;
+    n++;
+ 
+    for(i =1; i<=k; i++){
+        struct a *new;
+        new= malloc(sizeof(struct a));
+        b->next = new;
+        new->before = b;
+        new->next = NULL;
+        new->count = 1;;
+        new->nomber = n;
+        b = b->next;
+        n++;
+    }
+    new= malloc(sizeof(struct a));
+    b->next = new;
+    new->before = b;
+    new->next = NULL;
+    new->count = 0;;
+    new->nomber = n;
+    b = b->next;
+    n++;
+ 
+ 
+ 
+    return(head);
+ 
+ }
+ 
+ 
+ 
+ 
+void print_screen(struct a *head, struct a *tail)
+{
+     struct a *p;
+     int i = 1;
+     p=head;
+     while(p)
+     {
+         printf("%d", p->count);
+         p=p->next;
+     }
+     printf("\n");
+     ;
+     for(i = 1; i<tail->nomber; i++) printf(" ");
+     printf("^");
+     printf("\n");
+ 
+}
+ 
+ 
+ 
+ 
+ 
+ 
+int main()
+{
+    int n = 0, a, k, x;
+    struct a *head, *b;
+    scanf("%d", &a);
+    scanf("%d", &k);
+ 
+ 
+    head=get(a, k);
+    print_screen(head, head);
+     scanf("%d", &x);
+       switch(x)
+       {
+            case 1: b = head;
+                    while(b->count){
+                    b = b->next;
+                    print_screen(head, b);
+                    }
+                    b->count = 1;
+                    print_screen(head, b);
+                    while(b->count){
+                    b = b->next;
+                    print_screen(head, b);
+                    }
+                    b = b->before;
+                    print_screen(head, b);
+                    b->count = 0;
+                    print_screen(head, b);
+                    break;
+            case 2: b = head;
+                    while(b->count){
+                    b = b->next;
+                    print_screen(head, b);
+                    }
+                    b = b->before;
+                    print_screen(head, b);
+                    b->count = 0;
+                    b = b->before;
+                    print_screen(head, b);
+                    b->count = 0;
+                    print_screen(head, b);
+                    break;
+ 
+            case 3:
+                    b = head;
+                    while(b->count){
+                    b = b->next;
+                    print_screen(head, b);
+                    }
+                    b = b->before;
+                    print_screen(head, b);
+                    b->count = 0;
+                    print_screen(head, b);
+                    b = b->next;
+                    print_screen(head, b);
+                    b->count = 1;
+                    print_screen(head, b);
+                    b = b->before;
+                    print_screen(head, b);
+                    while(!(b->count))
+                    {
+                        b = b->before;
+                        print_screen(head, b);
+                    }
+                    while(b->before)
+                    {
+ 
+ 
+                        b->count = 0;
+                        print_screen(head, b);
+                        b = b->next;
+                        print_screen(head, b);
+                        while(b->count){
+                            b = b->next;
+                            print_screen(head, b);
+                        }
+                        b->count = 1;
+                        print_screen(head, b);
+                        b = b->before;
+                        print_screen(head, b);
+                        while(!(b->count))
+                        {
+                            b = b->before;
+                            print_screen(head, b);
+                        }
+ 
+                    }
+ 
+                    break;
+            case 4:
+                    b = head;
+                    while(b->next)
+                    {
+                        b->count = 0;
+                        print_screen(head, b);
+                        b = b->next;
+                        print_screen(head, b);
+                        b = b->next;
+                        print_screen(head, b);
+                        b->count = 0;
+                        print_screen(head, b);
+                    }
+                    b = b->before;
+                    print_screen(head, b);
+                    while(!(b->count))
+                    {
+                        b = b->before;
+                        print_screen(head, b);
+                    }
+                    b = b->before;
+                    print_screen(head, b);
+                    while(!(b->count))
+                    {
+                        b = b->next;
+                        print_screen(head, b);
+                        b->count = 0;
+                        print_screen(head, b);
+                        while(b->before)
+                        {
+                            b = b->before;
+                            print_screen(head, b);
+                        }
+                        b = b->next;
+                        print_screen(head, b);
+                        while(b->count)
+                        {
+                            b = b->next;
+                            print_screen(head, b);
+                        }
+                        b->count = 1;
+                        print_screen(head, b);
+                        while(b->next)
+                        {
+                            b = b->next;
+                            print_screen(head, b);
+                        }
+                        b->before;
+                        print_screen(head, b);
+                         while(!(b->count))
+                        {
+                            b = b->before;
+                            print_screen(head, b);
+                        }
+                        b = b->before;
+                        print_screen(head, b);
+                    }
+ 
+ 
+                    break;
+        }
+ 
+    return (0);
+}
