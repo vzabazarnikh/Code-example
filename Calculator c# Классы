@@ -1,0 +1,174 @@
+using System;
+using System.IO;
+using System.Text;
+
+namespace ConsoleApp10
+{
+    class Calculator
+    {
+        public double a;
+        public double b;
+        public void Sum()
+        {
+            double c = a + b;
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("Cумма: {0}", c);
+            }
+            Console.WriteLine("{0}", c);
+            Choice();
+        }
+
+        public void Subtraction()
+        {
+            double c = a - b;
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("Разность: {0}", c);
+            }
+            Console.WriteLine("{0}", c);
+            Choice();
+        }
+
+        public void Multiplication()
+        {
+            double c = a * b;
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("Произведение: {0}", c);
+            }
+            Console.WriteLine("{0}", c);
+            Choice();
+        }
+
+        public void Division()
+        {
+            if (b == 0)
+            {
+                using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+                {
+                    file.WriteLine("Ошибка, на ноль делить нельзя");
+                }
+                Console.WriteLine("Ошибка, на ноль делить нельзя");
+                Choice();
+            }
+            double c = a * b;
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("Частное: {0}", c);
+            }
+            Console.WriteLine("{0}", c);
+            Choice();
+        }
+
+        public void Reset()
+        {
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("Сброс");
+            }
+
+            return;
+        }
+
+        public void Output()
+        {
+            using (FileStream fstream = File.OpenRead(@"C:\\file.txt"))
+            {
+                byte[] array = new byte[fstream.Length];
+                fstream.Read(array, 0, array.Length);
+                string textFromFile = System.Text.Encoding.Default.GetString(array);
+                Console.WriteLine("Текст из файла: {0}", textFromFile);
+            }
+            Choice();
+        }
+
+        public void Choice()
+        {
+            Console.WriteLine("Введите 1, если суммировать, 2, если вычитать, 3 - умножать, 4 - делить, 5 - вывод, 0 - сброс");
+            string ch = Console.ReadLine();
+            if (ch == "1")
+            {
+                Sum();
+            }
+            else if (ch == "2")
+            {
+                Subtraction();
+            }
+            else if (ch == "3")
+            {
+                Multiplication();
+            }
+            else if (ch == "4")
+            {
+                Division();
+            }
+            else if (ch == "5")
+            {
+                Output();
+            }
+
+            if (ch != "0")
+            {
+                Console.WriteLine("Некорректный ввод");
+                Choice();
+            }
+            Reset();
+            return;
+        }
+    }
+
+
+
+    class Program
+    {
+        static double Entry()
+        {
+            string sn = Console.ReadLine();
+            double s;
+            try
+            {
+                s = Double.Parse(sn);
+            }
+            catch
+            {
+                using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+                {
+                    file.WriteLine("Некорректный ввод данных");
+                }
+                Console.WriteLine("Некорректный ввод данных, пробуйте еще раз");
+                s = Entry();
+                return s;
+            }
+            return s;
+        }
+
+        static void Start()
+        {
+            Console.WriteLine("Введите первое число");
+            double a = Entry();
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("a = {0}", a);
+            }
+            Console.WriteLine("Введите второе число");
+            double b = Entry();
+            using (StreamWriter file = new StreamWriter("C:\\file.txt", true))
+            {
+                file.WriteLine("b = {0}", b);
+            }
+            Calculator q = new Calculator();
+            q.a = a;
+            q.b = b;
+            q.Choice();
+            Start();
+        }
+
+
+        static void Main(string[] args)
+        {
+            System.IO.File.WriteAllText("C:\\file.txt", "");
+            Start();
+        }
+    }
+}
