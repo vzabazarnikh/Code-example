@@ -1,0 +1,286 @@
+static void VvodOM(int[] a)
+        {
+            Console.WriteLine("Введите элементы массива");
+            for(int i = 0; i < a.Length; i++)
+                a[i] = Convert.ToInt32(Console.ReadLine());
+        }
+        static void FReadOM(int[] af)
+        { 
+            StreamReader f = new StreamReader(@"C:\Users\Мария\Desktop\Универ\Visulal Studio\Программы\Л1М1.txt");
+            string s = f.ReadToEnd();
+            string[] astr = s.Split(' ');
+            for (int i = 0; i < astr.Length; i++)
+                af[i] = Convert.ToInt32(astr[i]);
+        }
+        static void VivodOM(int[] a)
+        {
+            Console.WriteLine("Массив:");
+            for (int i = 0; i < a.Length; i++)
+            {
+                Console.Write(a[i] + " ");
+            }
+        }  
+        static void PMaxOM(int[] a)
+        {
+            Console.WriteLine();
+            int max = -2000000000;
+            for(int i = 0; i < a.Length; i++)
+            {
+                if (a[i] > max)
+                    max = a[i];
+            }
+            Console.WriteLine("Максимум равен " + max);
+        }
+        static void PMinOM(int[] a)
+        {
+            int min = 2000000000;
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] < min)
+                    min =a[i];
+            }
+            Console.WriteLine("Минимум равен " + min);
+        }
+        static void ObSortOM(int[] a)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Результат обратной сортировки:");
+            int t = 0;
+            for(int i = 0; i < a.Length; i ++)
+            {
+                for(int j = 0; j < a.Length; j++)
+                {
+                    if(a[i] > a[j])
+                    {
+                        t = a[j];
+                        a[j] = a[i];
+                        a[i] = t;
+                    }
+                }
+            }
+            for (int i = 0; i < a.Length; i++)
+                Console.Write(a[i] + " ");
+        }
+        static void PSortOM(int[] a)
+        {
+            Console.WriteLine("Результат прямой сортировки:");
+            int t = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a.Length; j++)
+                {
+                    if (a[i] < a[j])
+                    {
+                        t = a[i];
+                        a[i] = a[j];
+                        a[j] = t;
+                    }
+                }
+            }
+            for (int i = 0; i < a.Length; i++)
+                Console.Write(a[i] + " ");
+        }
+        static void ZapChOM(int[] a)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Массив четных элементов:");
+            int k = 0;
+            for(int i = 0; i < a.Length; i ++ )
+            {
+                if (a[i] % 2 == 0)
+                    k++;
+            }
+            int[] ach = new int[k];
+            int j = 0;
+            for(int i = 0; i < a.Length; i++)
+            {
+                if (a[i] % 2 == 0)
+                {
+                    ach[j] = a[i];
+                    j++;
+                }
+            }
+            for (int i = 0; i < ach.Length; i++)
+                Console.Write(ach[i] + " ");
+        }
+        static void FReadDM(int [,] a)
+        {
+            string[] stroki = File.ReadAllLines(@"C:\Users\Мария\Desktop\Универ\Visulal Studio\Программы\Л1М2.txt");
+            for(int i = 0; i < stroki.Length; i ++)
+            {
+                string[] sa = stroki[i].Split(' ');
+                for (int j = 0; j < sa.Length; j++)
+                    a[i, j] = Convert.ToInt32(sa[j]);
+            }
+        }
+        static void VvodDM(int[,] a)
+        {
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                Console.WriteLine("Введите элементы строки " + (i +1) + " :");
+                for(int j = 0; j < a.GetLength(1); j++)
+                {
+                    a[i, j] = Convert.ToInt32(Console.ReadLine());
+                }
+            }
+        }
+        static void VivodDM(int[,] a)
+        {
+            Console.WriteLine("Введенный массив:");
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                Console.WriteLine();
+                for (int j = 0; j < a.GetLength(1); j++)
+                    Console.Write(a[i, j] + " ");
+            }
+        }
+        static void PMinDM(int[,] a)
+        {
+            int min = 2000000000;
+            int inum = 0, jnum = 0;
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                    if(a[i,j] < min)
+                    {
+                        min = a[i, j];
+                        inum = i;
+                        jnum = j;
+                    }
+            }
+            Console.WriteLine("Минимальный элемент равен " + min + " с индексом [" + inum + "," + jnum + "]");
+        }
+        static void PMaxDM(int[,] a)
+        {
+            Console.WriteLine();
+            int max = -2000000000;
+            int inum = 0, jnum = 0;
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                    if (a[i, j] > max)
+                    {
+                        max = a[i, j];
+                        inum = i;
+                        jnum = j;
+                    }
+            }
+            Console.WriteLine("Максимальный элемент равен " + max + " с индексом [" + inum + "," + jnum + "]");
+        }
+        static void SumDM(int[,] a)
+        {
+            int[,] array = new int[a.GetLength(0), a.GetLength(1)];
+            int[,] arrayRez = new int[a.GetLength(0), a.GetLength(1)];
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                Console.WriteLine("Введите " + a.GetLength(1) + " элементов в строку " + (1 + i));
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    array[i, j] = Convert.ToInt32(Console.ReadLine());
+                }
+            }
+            Console.WriteLine("Сумма массивов");
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    arrayRez[i, j] = array[i, j] + a[i, j];
+                    Console.Write(arrayRez[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+            
+        }
+        static void RaznDM(int[,] a)
+        {
+            int[,] array = new int[a.GetLength(0), a.GetLength(1)];
+            int[,] arrayRez = new int[a.GetLength(0), a.GetLength(1)];
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                Console.WriteLine("Введите " + a.GetLength(1) + " элементов в строку " + (1 + i));
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    array[i, j] = Convert.ToInt32(Console.ReadLine());
+                }
+            }
+            Console.WriteLine("Разность массивов");
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    arrayRez[i, j] = array[i, j] - a[i, j];
+                    Console.Write(arrayRez[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+        static void FReadSM(int[][] a)
+        {
+            string[] stroki = File.ReadAllLines(@"C:\Users\Мария\Desktop\Универ\Visulal Studio\Программы\Л1М3.txt");
+            for(int i = 0; i < stroki.Length; i++)
+            {
+                string[] sa = stroki[i].Split(' ');
+                a[i] = new int[sa.Length];
+                for (int j = 0; j < sa.Length; j++)
+                    a[i][j] = Convert.ToInt32(sa[j]);
+            }
+        }
+        static void VvodSM(int[][] a)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                Console.WriteLine("Введите количество элементов в строке " + (i + 1));
+                int n = Convert.ToInt32(Console.ReadLine());
+                a[i] = new int[n];
+                Console.WriteLine("Введите " + n + " элементов в строку " + (i + 1));
+                for (int j = 0; j < n; j++)
+                    a[i][j] = Convert.ToInt32(Console.ReadLine());
+            }
+        }
+        static void VivodSM(int[][] a)
+        {
+            Console.WriteLine("Введенный массив:");
+            for(int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a[i].Length; j++)
+                    Console.Write(a[i][j] + " ");
+                Console.WriteLine();
+            }
+        }
+        static void SmenaElSM(int[][] a)
+        {
+            Console.WriteLine("Введите строку элемента для замены");
+            int i = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите столбец элемента для замены");
+            int j = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите новый элемент");
+            a[i][j] = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Изменённый массив:");
+            VivodSM(a);
+        }
+        static void PMaxSM(int[][] a)
+        {
+            int max = -2000000000;
+            for(int i = 0; i < a.Length; i++)
+            {
+                for(int j = 0; j < a[i].Length; j++)
+                {
+                    if (a[i][j] > max)
+                        max = (a[i][j]);
+                }
+            }
+            Console.WriteLine("Максимальный элемент равен " + max);
+        }
+        static void PMinSM(int[][] a)
+        {
+            int min = 2000000000;
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a[i].Length; j++)
+                {
+                    if (a[i][j] < min)
+                        min = (a[i][j]);
+                }
+            }
+            Console.WriteLine("Минимальный элемент равен " + min);
+        }
